@@ -1,0 +1,11 @@
+div.title {
+  text-align: center;
+}
+
+div.title__text {
+  font-weight: 600;
+}
+
+div.title__hint {
+  font-style: italic;
+}
