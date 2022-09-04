@@ -1,34 +1,40 @@
 import axios from 'axios';
-import { useSelector } from 'react-redux';
-import { getStats, setCountry } from '../redux/Stats/StatsSlice';
 import { store } from '../redux/store';
+import { useSelector } from 'react-redux';
+import { isRejectedWithValue } from '@reduxjs/toolkit';
+import { getStats, setCountry } from '../redux/Stats/StatsSlice';
 
 export const getState = () => {
   return useSelector((state) => state.stats);
 };
 
 export const getCounts = () => {
-  return getState().counts;
+  return useSelector((state) => state.stats.counts);
 };
 
 export const getInformations = () => {
-  return getState().informations;
+  return useSelector((state) => state.stats.informations);
 };
 
-export const getStatsFromAPI = async () => {
+export const getStatsFromAPI = async ({ country }) => {
   const handle = await axios(
-    `https://covid19.mathdro.id/api${false ? '/countries/country' : ''}`
+    `https://covid19.mathdro.id/api${
+      country === 'Global' ? '' : `/countries/${country}`
+    }`
   );
 
-  return handle.data;
+  return handle.status === 200 ? handle.data : isRejectedWithValue();
 };
 
-export const handleCountry = (event) => {
+export const handleCountry = (country) => {
   const dispatch = store.dispatch;
-  dispatch(setCountry({ country: event.target.value }));
+  dispatch(setCountry({ country }));
+  dispatch(getStats({ country }));
 };
 
 export const runGetStats = () => {
   const dispatch = store.dispatch;
-  dispatch(getStats());
+
+  const country = store.getState().stats.informations.country;
+  dispatch(getStats({ country }));
 };

@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  isRejected,
+  isRejectedWithValue,
+} from '@reduxjs/toolkit';
 import { getStatsFromAPI } from '../../actions/actions';
 
 export const getStats = createAsyncThunk('stats/getStats', getStatsFromAPI);
@@ -31,7 +36,12 @@ export const StatsSlice = createSlice({
     },
     [getStats.rejected]: (state, action) => {
       state.informations.requestStatus = 'error';
-      state.informations.error = action.payload.error.message;
+      state.informations.error = action.error.message;
+
+      state.counts.infected.count = 0;
+      state.counts.recovered.count = 0;
+      state.counts.death.count = 0;
+      state.counts.active.count = 0;
     },
     [getStats.fulfilled]: (state, action) => {
       const { confirmed, recovered, deaths, lastUpdate } = action.payload;
