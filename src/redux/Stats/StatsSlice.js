@@ -7,15 +7,15 @@ export const StatsSlice = createSlice({
   name: 'stats',
   initialState: {
     counts: {
-      infected: { count: 0 },
-      recovered: { count: 0 },
-      deaths: { count: 0 },
-      active: { count: 0 },
+      infected: { title: 'infected', count: 0 },
+      recovered: { title: 'recovered', count: 0 },
+      death: { title: 'death', count: 0 },
+      active: { title: 'active', count: 0 },
     },
     informations: {
       requestStatus: 'unused',
       error: null,
-      last_update: null,
+      lastUpdate: null,
       country: 'Global',
     },
   },
@@ -38,11 +38,11 @@ export const StatsSlice = createSlice({
 
       state.informations.requestStatus = 'done';
       state.informations.error = null;
-      state.informations.last_update = lastUpdate;
+      state.informations.lastUpdate = lastUpdate;
 
       state.counts.infected.count = confirmed.value;
       state.counts.recovered.count = recovered.value;
-      state.counts.deaths.count = deaths.value;
+      state.counts.death.count = deaths.value;
       state.counts.active.count = confirmed.value - deaths.value;
     },
   },
